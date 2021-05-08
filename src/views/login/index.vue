@@ -87,7 +87,7 @@ export default {
 
       try {
         const { data: res } = await login(this.loginForm)
-        // console.log('登录成功', res)
+        console.log('登录成功', res)
         this.$toast.success('登录成功')
       } catch (err) {
         if (err.response.status === 400) {
