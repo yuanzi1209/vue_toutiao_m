@@ -1,4 +1,8 @@
+/**
+ * 用户请求后台数据模块
+ */
 import request from '../utils/request'
+
 export const login = (data) => {
   return request({
     method: 'POST',
@@ -6,7 +10,8 @@ export const login = (data) => {
     data
   })
 }
-export const sendYzm = () => {
+
+export const sendSms = (mobile) => {
   return request({
     method: 'GET',
     url: `/app/v1_0/sms/codes/${mobile}`

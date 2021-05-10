@@ -6,11 +6,13 @@ import store from './store'
 // 导入 vant
 import Vant from 'vant'
 import 'vant/lib/index.css'
+Vue.use(Vant)
 
+// 导入 amfe-flexible
 import 'amfe-flexible'
 
+// 导入全局样式
 import './styles/index.less'
-Vue.use(Vant)
 
 Vue.config.productionTip = false
 

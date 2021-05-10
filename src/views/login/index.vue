@@ -7,7 +7,7 @@
       <van-field
         name="mobile"
         placeholder="请输入手机号"
-        v-model="loginForm.mobile"
+        v-model="user.mobile"
         :rules="loginFormRules.mobile"
         type="number"
         maxlength="11"
@@ -17,7 +17,7 @@
       <van-field
         name="code"
         placeholder="请输入验证码"
-        v-model="loginForm.code"
+        v-model="user.code"
         :rules="loginFormRules.code"
         type="number"
         maxlength="6"
@@ -34,7 +34,7 @@
             type="default"
             class="btn_yzm"
             native-type="button"
-            @click="onSendYzm"
+            @click="onSendSms"
             >发送验证码</van-button
           >
         </template>
@@ -49,12 +49,13 @@
 </template>
 
 <script>
-import { login, sendYzm } from '../../api/user'
+import { login, sendSms } from '../../api/user'
+
 export default {
   name: 'LoginIndex',
   data() {
     return {
-      loginForm: {
+      user: {
         mobile: '',
         code: '',
       },
@@ -85,9 +86,13 @@ export default {
         duration: 0,
       })
 
+      /* 向后台发送请求 */
       try {
-        const { data: res } = await login(this.loginForm)
+        const { data: res } = await login(this.user)
         console.log('登录成功', res)
+
+        this.$store.commit('setUser', res.data)
+
         this.$toast.success('登录成功')
       } catch (err) {
         if (err.response.status === 400) {
@@ -95,23 +100,38 @@ export default {
           this.$toast.fail('手机号或验证码输入不正确')
         } else {
           // console.log('登录失败，请重新登录')
-          this.$toast.fail('登录失败，请重新登录')
+          this.$toast.fail('登录失败，请稍后重试')
         }
       }
     },
-    async onSendYzm() {
+    async onSendSms() {
+      // console.log('sendSms')
+
+      /* 校验手机号 */
       try {
-        this.$refs.loginFormRef.validate('mobile')
+        await this.$refs.loginFormRef.validate('mobile')
+        // console.log('验证成功')
       } catch (err) {
         return console.log('验证失败', err)
       }
+
+      /* 开启倒计时 */
       this.isShowCountDown = true
+
       /* 获取短信验证码 */
-      // try {
-      //   await SendYzm(this.loginForm.mobile)
-      // } catch (err) {
-      //   console.log(err)
-      // }
+      try {
+        const res = await sendSms(this.user.mobile)
+        console.log('发送成功', res)
+      } catch (err) {
+        /* 获取验证码失败，关闭倒计时 */
+        this.isShowCountDown = false
+
+        if (err.response.status === 429) {
+          this.$toast('发送太频繁，请稍后重试')
+        } else {
+          this.$toast('发送失败，请稍后重试')
+        }
+      }
     },
   },
 }
