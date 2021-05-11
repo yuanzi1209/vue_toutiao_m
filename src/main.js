@@ -8,7 +8,7 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 Vue.use(Vant)
 
-// 导入 amfe-flexible
+// 导入 amfe-flexible => 设置 rem 基准值
 import 'amfe-flexible'
 
 // 导入全局样式

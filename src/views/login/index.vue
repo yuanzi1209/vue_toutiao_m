@@ -1,7 +1,9 @@
 <template>
   <div class="login-container">
     <!-- 导航栏 -->
-    <van-nav-bar title="登录" />
+    <van-nav-bar title="登录">
+      <van-icon name="cross" slot="left" @click="goBack" />
+    </van-nav-bar>
     <!-- 表单区 -->
     <van-form @submit="loginFormSubmit" ref="loginFormRef">
       <van-field
@@ -89,11 +91,14 @@ export default {
       /* 向后台发送请求 */
       try {
         const { data: res } = await login(this.user)
-        console.log('登录成功', res)
+        // console.log('登录成功', res)
 
         this.$store.commit('setUser', res.data)
 
         this.$toast.success('登录成功')
+
+        // 跳转到
+        this.$router.back()
       } catch (err) {
         if (err.response.status === 400) {
           // console.log('手机号或验证码输入不正确')
@@ -132,6 +137,9 @@ export default {
           this.$toast('发送失败，请稍后重试')
         }
       }
+    },
+    goBack() {
+      this.$router.back()
     },
   },
 }

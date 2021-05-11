@@ -8,7 +8,7 @@ import { setItem, getItem } from '@/utils/storage'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     /* 存储登录用户的信息 思考：作用是？*/
     // user: JSON.parse(localStorage.getItem('token'))
@@ -28,3 +28,5 @@ export default new Vuex.Store({
   modules: {
   }
 })
+
+export default store
