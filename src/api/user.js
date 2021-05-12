@@ -1,5 +1,5 @@
 /**
- * 用户请求后台数据模块
+ * 请求用户数据模块
  */
 import request from '../utils/request'
 import store from '@/store'

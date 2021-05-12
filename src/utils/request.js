@@ -4,8 +4,11 @@
 import axios from 'axios'
 import store from '@/store'
 
+// 基本路径
 const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn/'
+  // baseURL:'http://toutiao-app.itheima.net/'
+  // baseURL:'http://localhost:8001'
 })
 
 // 请求拦截器

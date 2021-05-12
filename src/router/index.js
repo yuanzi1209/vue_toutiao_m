@@ -14,11 +14,12 @@ const routes = [
   },
   {
     path: '/',
-    // name: 'layout',
+    // name: 'layout',    // 如果父路由有默认子路由，则name无意义
     component: () => import('@/views/layout'),
     children: [
       {
-        path: '/', name: 'home', component: () => import('@/views/home')
+        // 默认子路由
+        path: '', name: 'home', component: () => import('@/views/home')
       },
       {
         path: '/qa', name: 'qa', component: () => import('@/views/qa')

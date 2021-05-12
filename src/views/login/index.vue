@@ -14,7 +14,7 @@
         type="number"
         maxlength="11"
       >
-        <i slot="left-icon" class="toutiao toutiao-shouji"></i> >
+        <i slot="left-icon" class="toutiao toutiao-shouji"></i>
       </van-field>
       <van-field
         name="code"
@@ -26,25 +26,27 @@
       >
         <i slot="left-icon" class="toutiao toutiao-yanzhengma"></i>
         <template #button>
+          <!-- 倒计时 -->
           <van-count-down
-            :time="1000 * 10"
+            :time="1000 * 5"
             format=" ss s"
-            v-show="isShowCountDown"
+            v-if="isShowCountDown"
+            @finish="isShowCountDown = false"
           />
           <van-button
+            v-else
             size="small"
             type="default"
-            class="btn_yzm"
+            class="btn_sms"
             native-type="button"
             @click="onSendSms"
-            >发送验证码</van-button
           >
+            发送验证码
+          </van-button>
         </template>
       </van-field>
       <div class="btn_login_wrap">
-        <van-button block type="info" native-type="submit" class="btn_login"
-          >登录</van-button
-        >
+        <van-button block type="info" class="btn_login"> 登录</van-button>
       </div>
     </van-form>
   </div>
@@ -58,8 +60,8 @@ export default {
   data() {
     return {
       user: {
-        mobile: '',
-        code: '',
+        mobile: '13911111111',
+        code: '246810',
       },
       loginFormRules: {
         mobile: [
@@ -88,49 +90,42 @@ export default {
         duration: 0,
       })
 
-      /* 向后台发送请求 */
+      // 请求
       try {
         const { data: res } = await login(this.user)
-        // console.log('登录成功', res)
-
+        console.log('登录成功', res)
         this.$store.commit('setUser', res.data)
-
         this.$toast.success('登录成功')
-
         // 跳转到
         this.$router.back()
       } catch (err) {
         if (err.response.status === 400) {
-          // console.log('手机号或验证码输入不正确')
           this.$toast.fail('手机号或验证码输入不正确')
         } else {
-          // console.log('登录失败，请重新登录')
           this.$toast.fail('登录失败，请稍后重试')
         }
       }
     },
     async onSendSms() {
-      // console.log('sendSms')
-
-      /* 校验手机号 */
+      // 校验手机号
       try {
+        // validate 验证表单，支持传入 name 来验证单个或部分表单项
         await this.$refs.loginFormRef.validate('mobile')
         // console.log('验证成功')
       } catch (err) {
         return console.log('验证失败', err)
       }
 
-      /* 开启倒计时 */
+      // 验证通过显示开启倒计时
       this.isShowCountDown = true
 
-      /* 获取短信验证码 */
+      // 获取短信验证码
       try {
         const res = await sendSms(this.user.mobile)
-        console.log('发送成功', res)
+        // console.log('发送成功', res)
       } catch (err) {
-        /* 获取验证码失败，关闭倒计时 */
+        // 发送验证码失败，关闭倒计时
         this.isShowCountDown = false
-
         if (err.response.status === 429) {
           this.$toast('发送太频繁，请稍后重试')
         } else {
@@ -148,22 +143,24 @@ export default {
 <style lang="less" scoped>
 .toutiao {
   color: #7b7b7b;
-  font-size: 20px;
+  font-size: 37px;
   margin-right: 10px;
 }
 .btn_login_wrap {
-  padding: 35px 20px;
+  padding: 53px 33px;
   .btn_login {
     background-color: #6db4fb;
     border: 0;
     border-radius: 8px;
   }
 }
-.btn_yzm {
+.btn_sms {
+  width: 152px;
+  height: 46px;
   background-color: #eeeeee;
   border: 0;
   border-radius: 15px;
   color: #b3b3b3;
-  font-size: 12px;
+  font-size: 22px;
 }
 </style>

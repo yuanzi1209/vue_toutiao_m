@@ -1,5 +1,6 @@
 <template>
   <div class="layout-container">
+    <!-- 子路由占位符 -->
     <router-view />
     <!-- 底部导航栏 -->
     <van-tabbar class="layout-tabbar" route>
