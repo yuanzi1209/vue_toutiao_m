@@ -4,11 +4,7 @@
     <div class="header user-info" v-if="user">
       <div class="base-info">
         <div class="left">
-          <van-image
-            class="avatar"
-            round
-            :src="userInfo.photo"
-          />
+          <van-image class="avatar" round :src="userInfo.photo" />
           <span class="uname">原子</span>
         </div>
         <div class="right">
@@ -17,19 +13,19 @@
       </div>
       <div class="data-info">
         <div class="data-item">
-          <span class="num">{{userInfo.follow_count}}</span>
+          <span class="num">{{ userInfo.follow_count }}</span>
           <span class="text">头条</span>
         </div>
         <div class="data-item">
-          <span class="num">{{userInfo.art_count}}</span>
+          <span class="num">{{ userInfo.art_count }}</span>
           <span class="text">关注</span>
         </div>
         <div class="data-item">
-          <span class="num">{{userInfo.fans_count}}</span>
+          <span class="num">{{ userInfo.fans_count }}</span>
           <span class="text">粉丝</span>
         </div>
         <div class="data-item">
-          <span class="num">{{userInfo.like_count}}</span>
+          <span class="num">{{ userInfo.like_count }}</span>
           <span class="text">获赞</span>
         </div>
       </div>
@@ -41,7 +37,6 @@
         <span class="text">登录 / 注册</span>
       </div>
     </div>
-
     <!-- 宫格导航 -->
     <van-grid :column-num="2" class="grid-nav" clickable>
       <van-grid-item>
@@ -84,7 +79,11 @@ export default {
   },
   watch: {},
   created() {
-    this.loadUserInfo()
+    // this.loadUserInfo()
+    // 细节处理
+    if (this.user) {
+      this.loadUserInfo()
+    }
   },
   mounted() {},
   methods: {
@@ -109,7 +108,7 @@ export default {
       const { data: res } = await getUserInfo()
       // console.log(res)
       this.userInfo = res.data
-      console.log(this.userInfo);
+      // console.log(this.userInfo)
     },
   },
 }
@@ -117,7 +116,7 @@ export default {
 
 <style lang="less" scoped>
 .my-container {
-  height: 1000px;
+  // height: 1000px;
   .header {
     height: 361px;
     background: url('../../assets/banner.png');
@@ -143,45 +142,47 @@ export default {
       }
     }
   }
-  .base-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 231px;
-    padding: 76px 32px 23px;
-    box-sizing: border-box;
-    .left {
+  .user-info {
+    .base-info {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      .avatar {
-        width: 132px;
-        height: 132px;
-        border: 2px solid #fff;
-        margin-right: 23px;
+      height: 231px;
+      padding: 76px 32px 23px;
+      box-sizing: border-box;
+      .left {
+        display: flex;
+        align-items: center;
+        .avatar {
+          width: 132px;
+          height: 132px;
+          border: 2px solid #fff;
+          margin-right: 23px;
+        }
+        .uname {
+          font-size: 30px;
+          color: #fff;
+        }
       }
-      .uname {
-        font-size: 30px;
+    }
+    .data-info {
+      display: flex;
+      justify-content: space-around;
+      height: 130px;
+      .data-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         color: #fff;
       }
-    }
-  }
-  .data-info {
-    display: flex;
-    flex: 1;
-    justify-content: space-around;
-    height: 130px;
-    .data-item {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-    }
-    .num {
-      font-size: 36px;
-    }
-    .text {
-      font-size: 23px;
+      .num {
+        font-size: 36px;
+      }
+      .text {
+        font-size: 23px;
+      }
     }
   }
   .grid-nav {

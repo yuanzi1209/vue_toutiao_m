@@ -96,7 +96,7 @@ export default {
         console.log('登录成功', res)
         this.$store.commit('setUser', res.data)
         this.$toast.success('登录成功')
-        // 跳转到
+        // 跳转到  思考：也可以跳转到首页
         this.$router.back()
       } catch (err) {
         if (err.response.status === 400) {

@@ -11,6 +11,9 @@ Vue.use(Vant)
 // 导入 amfe-flexible => 设置 rem 基准值
 import 'amfe-flexible'
 
+// 导入 dayjs
+import '@/utils/dayjs'
+
 // 导入全局样式
 import './styles/index.less'
 

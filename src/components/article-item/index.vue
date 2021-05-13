@@ -16,8 +16,8 @@
         </div>
         <div class="text">
           <span>{{ article.aut_name }}</span>
-          <span>{{ article.comm_count }}评论</span>
-          <span>{{ article.pubdate }}</span>
+          <span>{{ article.comm_count }} 评论</span>
+          <span>{{ article.pubdate | relativeTime }}</span>
         </div>
       </div>
       <!-- 右 -->
@@ -73,16 +73,17 @@ export default {
     height: 146px;
     .van-image {
       flex: 1;
+      margin-right: 4px;
     }
   }
 
   .text {
-    min-width: 480px;
+    // min-width: 480px;
     font-size: 23px;
     color: #b4b4b4;
     margin-top: 30px;
     span {
-      margin-right: 15px;
+      margin-right: 20px;
     }
   }
 }
