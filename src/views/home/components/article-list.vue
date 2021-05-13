@@ -61,27 +61,35 @@ export default {
   mounted() {},
   methods: {
     async onLoad() {
+      // console.log('onLoad')
       try {
         // 获取文章列表
         const { data: res } = await articleList({
           channel_id: this.channel.id,
-          // timestamp 当前页码 时间戳
+          // timestamp 时间戳 页码
           timestamp: this.timestamp || Date.now(),
+          // with_top 1-包含置顶
           with_top: 1,
         })
-        // console.log(res)
+        console.log('文章列表', res.data)
 
+       /*  // 制造错误
+        if(Math.random()>0.5){
+          JSON.parse('make error')
+        } */
+
+        // 滚动加载 => 不能直接赋值，要合并追加
         this.list.push(...res.data.results)
-        console.log('我是list', this.list)
 
-        // 加载状态结束
+        // 本次数据加载结束之后要把加载状态设置为结束
         this.loading = false
 
-        // 数据全部加载完成
+        // 判断数据是否全部加载完成
         if (res.data.results.length) {
           // 更新时间戳
           this.timestamp = res.data.pre_timestamp
         } else {
+          // 加载完成
           this.finished = true
         }
       } catch (err) {

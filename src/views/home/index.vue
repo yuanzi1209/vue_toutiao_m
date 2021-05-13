@@ -17,21 +17,37 @@
         <article-list :channel="item"></article-list>
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
-      <div slot="nav-right" class="hamburger-btn">
+      <div
+        slot="nav-right"
+        class="hamburger-btn"
+        @click="isShowChannelEdit = true"
+      >
         <i class="toutiao toutiao-gengduo"></i>
       </div>
     </van-tabs>
+    <!-- 频道编辑弹出层 -->
+    <van-popup
+      v-model="isShowChannelEdit"
+      closeable
+      position="bottom"
+      close-icon-position="top-left"
+      :style="{ height: '100%' }"
+    >
+      <channel-edit :mychannels="channels" :active="active"/>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getChannelList } from '@/api/user'
 import articleList from '@/views/home/components/article-list'
+import ChannelEdit from './components/channel-edit'
 
 export default {
   name: 'HomeIndex',
   components: {
     'article-list': articleList,
+    ChannelEdit,
   },
   props: {},
   data() {
@@ -39,6 +55,7 @@ export default {
       active: 0,
       channels: [],
       channel: {},
+      isShowChannelEdit: false,
     }
   },
   computed: {},
@@ -50,9 +67,9 @@ export default {
   methods: {
     async loadChannelList() {
       const { data: res } = await getChannelList()
-      console.log(res)
+      console.log('频道列表', res)
       this.channels = res.data.channels
-      console.log(this.channels)
+      console.log('channels', this.channels)
     },
   },
 }
@@ -89,34 +106,13 @@ export default {
     background-color: #3296fa;
     text-align: center;
   }
-  /* .hamburger-btn {
-    position: fixed;
-    right: 0;
-    width: 68px;
-    height: 83px;
-    line-height: 83px;
-    text-align: center;
-    opacity: 0.902;
-    i.toutiao {
-      font-size: 30px;
-      color: #333333;
-    }
-    &:before {
-      content: '';
-      position: absolute;
-      left: 0;
-      width: 1px;
-      height: 100%;
-      background-image: url(~@/assets/gradient-gray-line.png);
-      background-size: contain;
-    }
-  } */
+  // 占位符：解决汉堡按钮遮挡的文字区域
   .placeholder {
+    // 不参与 flex 平分
     flex-shrink: 0;
     width: 66px;
     height: 82px;
   }
-
   .hamburger-btn {
     position: fixed;
     right: 0;
@@ -137,6 +133,7 @@ export default {
       width: 1px;
       height: 100%;
       background-image: url(~@/assets/gradient-gray-line.png);
+      // 显示最长边
       background-size: contain;
     }
   }
