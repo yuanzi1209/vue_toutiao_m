@@ -33,7 +33,11 @@
       close-icon-position="top-left"
       :style="{ height: '100%' }"
     >
-      <channel-edit :mychannels="channels" :active="active"/>
+      <channel-edit
+        :mychannels="channels"
+        :active="active"
+        @update-active="updateActive"
+      />
     </van-popup>
   </div>
 </template>
@@ -70,6 +74,12 @@ export default {
       console.log('频道列表', res)
       this.channels = res.data.channels
       console.log('channels', this.channels)
+      // 已登录-请求获取用户的频道列表
+      // 未登录-判断是否有本地的频道列表
+    },
+    updateActive(i) {
+      console.log('home', i)
+      this.active = i
     },
   },
 }

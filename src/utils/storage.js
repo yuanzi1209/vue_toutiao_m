@@ -3,7 +3,7 @@
  */
 // 存储数据
 export const setItem = (key, value) => {
-    if (value !== value && typeof value === 'object') {
+    if (value !== null && typeof value === 'object') {
         value = JSON.stringify(value)
     }
     localStorage.setItem(key, value)
