@@ -8,6 +8,7 @@
         icon="search"
         class="search-btn"
         round
+        to="/search"
         >搜索
       </van-button>
     </van-nav-bar>
@@ -77,9 +78,11 @@ export default {
       // 已登录-请求获取用户的频道列表
       // 未登录-判断是否有本地的频道列表
     },
-    updateActive(i) {
-      console.log('home', i)
+    updateActive(i,isShowChannelEdit=true) {
+      // console.log('home', i)
       this.active = i
+      // 关闭弹框
+      this.isShowChannelEdit=isShowChannelEdit
     },
   },
 }

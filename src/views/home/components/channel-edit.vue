@@ -5,6 +5,7 @@
       <div slot="title" class="title">我的频道</div>
       <van-button
         plain
+        round
         type="danger"
         size="small"
         class="edit-btn"
@@ -72,15 +73,20 @@ export default {
   data() {
     return {
       allChannels: [],
-      isShowEdit: false,
-      fixChannel: [0], // 固定频道不允许删除
+      isShowEdit: false,  // 控制编辑按钮与删除操作
+      fixChannel: [0], // 固定频道不允许删除（如推荐id=0）
     }
   },
   computed: {
     ...mapState(['user']),
     recommendChannel() {
-      const channels = []
-      // 推荐频道=全部-我的
+      return this.allChannels.filter((allChannel) => {
+        return !this.mychannels.find((mychannel) => {
+          return mychannel.id === allChannel.id
+        })
+      })
+      /*  const channels = []
+      // 推荐频道=全部频道-我的频道
       this.allChannels.forEach((allChannel) => {
         const res = this.mychannels.find((mychannel) => {
           return mychannel.id === allChannel.id
@@ -90,7 +96,7 @@ export default {
         }
       })
 
-      return channels
+      return channels */
     },
   },
   methods: {
@@ -104,10 +110,11 @@ export default {
       }
     },
     async addChannel(item) {
-      // console.log(item)
+      // 点击+ 把推荐频道添加到我的频道
+      console.log('把推荐添加到我的频道',item)
       this.mychannels.push(item)
 
-      // 数据持久化处理
+      // *数据持久化处理
       if (this.user) {
         // 登录-存储到后台
         try {
@@ -135,13 +142,13 @@ export default {
         this.mychannels.splice(i, 1)
         // 如果删除的元素在激活项的前面，则需要让激活项-1
         if (i <= this.active) {
-          this.$emit('update-active', this.active - 1)
+          this.$emit('update-active', this.active - 1,true)
         }
         // 数据持久化处理
         this.removeChannel(item)
       } else {
-        // 激活
-        this.$emit('update-active', i)
+        // 非编辑-切换频道激活
+        this.$emit('update-active', i,false)
       }
     },
     async removeChannel(item) {
@@ -172,13 +179,11 @@ export default {
       color: #333;
     }
   }
-
   .edit-btn {
     width: 100px;
     height: 50px;
-    border-radius: 15px;
     .van-button__text {
-      font-size: 12px;
+      font-size: 24px;
     }
   }
   /deep/.grid {
@@ -201,7 +206,7 @@ export default {
       right: -90px;
       font-size: 8px;
       z-index: 999;
-      color: #ccc;
+      color: #cacaca;
     }
     .van-grid-item__text {
       margin-top: 0;
@@ -225,6 +230,7 @@ export default {
       .van-grid-item__text {
         margin-top: 0;
         margin-left: 8px;
+        // 不允许文字换行
         white-space: nowrap;
       }
     }
