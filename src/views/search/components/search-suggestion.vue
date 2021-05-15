@@ -1,10 +1,13 @@
 <template>
   <div class="search-suggestion">
-    <van-cell icon="search" v-for="(item, i) in searchSuggestionList" :key="i">
+    <van-cell
+      icon="search"
+      v-for="(item, i) in searchSuggestionList"
+      :key="i"
+      @click="needSearchRes(item)"
+    >
       <div slot="title" v-html="highLight(item)"></div>
     </van-cell>
-    <!-- <div>{{ htmlStr }}</div>
-    <div v-html=" htmlStr"></div> -->
   </div>
 </template>
 
@@ -23,7 +26,6 @@ export default {
   data() {
     return {
       searchSuggestionList: [],
-      htmlStr: "Hello <span style='color: red'>World</span>",
     }
   },
   computed: {},
@@ -54,6 +56,20 @@ export default {
     highLight(item) {
       // console.log(item)
       // 搜索关键词高亮显示
+      // 注意点：这种正则内部不能写变量
+      /* return item.replace(
+        /this.searchText/gi,
+        <span style="color:red">this.searchText</span>
+      ) */
+      const reg = new RegExp(this.searchText, 'gi')
+      return item.replace(
+        reg,
+        `<span style="color:#3296FA">${this.searchText}</span>`
+      )
+    },
+    needSearchRes(item) {
+      // console.log('needSearchRes', item)
+      this.$emit('needSearchRes', item)
     },
   },
 }

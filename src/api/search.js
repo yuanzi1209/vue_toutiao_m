@@ -1,5 +1,5 @@
 /**
- * 搜索请求模块
+ * 搜索请求后台数据模块
  */
 import request from '../utils/request'
 
@@ -10,5 +10,13 @@ export const getSearchSuggestion = (q) => {
         params: {
             q
         }
+    })
+}
+
+export const getSearchResult = (params) => {
+    return request({
+        method: 'GET',
+        url: '/app/v1_0/search',
+        params
     })
 }
