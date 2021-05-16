@@ -47,6 +47,9 @@
 import { getChannelList } from '@/api/user'
 import articleList from '@/views/home/components/article-list'
 import ChannelEdit from './components/channel-edit'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
+import { getMyChannel } from '@/api/channel'
 
 export default {
   name: 'HomeIndex',
@@ -63,7 +66,9 @@ export default {
       isShowChannelEdit: false,
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user']),
+  },
   watch: {},
   created() {
     this.loadChannelList()
@@ -71,18 +76,35 @@ export default {
   mounted() {},
   methods: {
     async loadChannelList() {
-      const { data: res } = await getChannelList()
-      console.log('频道列表', res)
-      this.channels = res.data.channels
-      console.log('channels', this.channels)
-      // 已登录-请求获取用户的频道列表
-      // 未登录-判断是否有本地的频道列表
+      // const { data: res } = await getChannelList()
+      // console.log('频道列表', res)
+      // this.channels = res.data.channels
+      // console.log('channels', this.channels)
+      let channels = []
+      if (this.user) {
+        // 登录
+        const { data: res } = await getChannelList()
+        channels = res.data.channels
+      } else {
+        // 未登录-判断是否有本地的频道列表
+        const localChannels = getItem('mychannels')
+        if (localChannels) {
+          // 有本地频道数据，则使用
+          channels = localChannels
+        } else {
+          // 没有本地频道数据，则请求获取默认推荐的频道列表
+          const { data } = await getMyChannel()
+          channels = data.data.channels
+        }
+        // 将数据更新到组件中
+        this.channels = channels
+      }
     },
-    updateActive(i,isShowChannelEdit=true) {
+    updateActive(i, isShowChannelEdit = true) {
       // console.log('home', i)
       this.active = i
       // 关闭弹框
-      this.isShowChannelEdit=isShowChannelEdit
+      this.isShowChannelEdit = isShowChannelEdit
     },
   },
 }

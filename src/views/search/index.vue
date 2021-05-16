@@ -34,6 +34,7 @@
 import searchSuggestion from './components/search-suggestion'
 import searchResult from './components/search-result'
 import searchHistory from './components/search-history'
+import { setItem, getItem } from '@/utils/storage'
 export default {
   name: 'SearchIndex',
   components: {
@@ -46,11 +47,18 @@ export default {
     return {
       searchText: '',
       isShowResult: false,
-      searchHistory: [],
+      // searchHistory: [],
+      searchHistory: getItem('searchHistory') || [],
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    searchHistory(val) {
+      console.log('监视搜索历史', val)
+      // 同步到本地存储
+      setItem('searchHistory', val)
+    },
+  },
   created() {},
   methods: {
     onSearch(val) {

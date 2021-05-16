@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       allChannels: [],
-      isShowEdit: false,  // 控制编辑按钮与删除操作
+      isShowEdit: false, // 控制编辑按钮与删除操作
       fixChannel: [0], // 固定频道不允许删除（如推荐id=0）
     }
   },
@@ -111,20 +111,21 @@ export default {
     },
     async addChannel(item) {
       // 点击+ 把推荐频道添加到我的频道
-      console.log('把推荐添加到我的频道',item)
+      // console.log('把推荐添加到我的频道',item)
       this.mychannels.push(item)
 
       // *数据持久化处理
       if (this.user) {
-        // 登录-存储到后台
+        // 登录-存储到后台 (接口有问题？)
         try {
           const { data: res } = await getMyChannel({
             id: item.id,
             seq: this.mychannels.length, // 序列号
           })
-          console.log('我的频道', res)
+          // console.log('我的频道', res)
         } catch (err) {
-          console.log(err)
+          // console.log(err)
+          // 轻提示
         }
       } else {
         // 未登录-存储到本地
@@ -142,22 +143,23 @@ export default {
         this.mychannels.splice(i, 1)
         // 如果删除的元素在激活项的前面，则需要让激活项-1
         if (i <= this.active) {
-          this.$emit('update-active', this.active - 1,true)
+          this.$emit('update-active', this.active - 1, true)
         }
-        // 数据持久化处理
+        // *数据持久化处理
         this.removeChannel(item)
       } else {
         // 非编辑-切换频道激活
-        this.$emit('update-active', i,false)
+        this.$emit('update-active', i, false)
       }
     },
     async removeChannel(item) {
       if (this.user) {
-        // 已登录-更新到线上
+        // 已登录-更新到线上 (接口有问题？)
         try {
           await removeChannelById(item.id)
         } catch (err) {
-          console.log(err)
+          // console.log(err)
+          // 轻提示
         }
       } else {
         // 未登录-更新到本地
