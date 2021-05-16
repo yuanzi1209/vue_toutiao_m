@@ -35,10 +35,13 @@ const routes = [
     name: 'search',
     component: () => import('@/views/search')
   },
+  // 动态路由
   {
-    path: '/article',
+    path: '/article/:articleId',
     name: 'article',
-    component: () => import('@/views/article')
+    component: () => import('@/views/article'),
+    // 开启props传参 => 将路由动态参数映射到组件的 props 中
+    props:true
   },
 ]
 

@@ -7,7 +7,8 @@ import store from '@/store'
 export const login = (data) => {
   return request({
     method: 'POST',
-    url: '/app/v1_0/authorizations',
+    // url: '/app/v1_0/authorizations',
+    url: '/v1_0/authorizations',
     data
   })
 }
@@ -15,7 +16,8 @@ export const login = (data) => {
 export const sendSms = (mobile) => {
   return request({
     method: 'GET',
-    url: `/app/v1_0/sms/codes/${mobile}`
+    // url: `/app/v1_0/sms/codes/${mobile}`
+    url: `/v1_0/sms/codes/${mobile}`
   })
 }
 
@@ -23,7 +25,8 @@ export const sendSms = (mobile) => {
 export const getUserInfo = () => {
   return request({
     method: 'GET',
-    url: '/app/v1_0/user',
+    // url: '/app/v1_0/user',
+    url: '/v1_0/user',
     // headers: {
     //   Authorization: `Bearer ${store.state.user.token}`
     // }
@@ -34,7 +37,26 @@ export const getUserInfo = () => {
 export const getChannelList = () => {
   return request({
     method: 'GET',
-    url: '/app/v1_0/user/channels',
+    // url: '/app/v1_0/user/channels',
+    url: '/v1_0/user/channels',
   })
 }
 
+// 关注用户
+export const addFollow = (userId) => {
+  return request({
+    method: 'POST',
+    url: '/v1_0/user/followings',
+    data: {
+      userId
+    }
+  })
+}
+
+// 取消关注用户
+export const cancelFollow = (userId) => {
+  return request({
+    method: 'DELETE',
+    url: `/v1_0/user/followings/${userId}`,
+  })
+}

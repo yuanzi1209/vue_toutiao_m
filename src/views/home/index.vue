@@ -49,7 +49,6 @@ import articleList from '@/views/home/components/article-list'
 import ChannelEdit from './components/channel-edit'
 import { mapState } from 'vuex'
 import { getItem } from '@/utils/storage'
-import { getMyChannel } from '@/api/channel'
 
 export default {
   name: 'HomeIndex',
@@ -84,6 +83,7 @@ export default {
       if (this.user) {
         // 登录
         const { data: res } = await getChannelList()
+        console.log('获取用户频道列表', res)
         channels = res.data.channels
       } else {
         // 未登录-判断是否有本地的频道列表
@@ -96,9 +96,9 @@ export default {
           const { data } = await getMyChannel()
           channels = data.data.channels
         }
-        // 将数据更新到组件中
-        this.channels = channels
       }
+      // 将数据更新到组件中
+      this.channels = channels
     },
     updateActive(i, isShowChannelEdit = true) {
       // console.log('home', i)

@@ -5,7 +5,7 @@
       <div class="base-info">
         <div class="left">
           <van-image class="avatar" round :src="userInfo.photo" />
-          <span class="uname">原子</span>
+          <span class="uname">{{userInfo.name}}</span>
         </div>
         <div class="right">
           <van-button size="mini" round>编辑资料</van-button>
