@@ -72,12 +72,24 @@
           ref="article-content"
         ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 评论列表 -->
+        <comment-list
+          :art_id="article.art_id"
+          @comment-data="totalCount = $event.total_count"
+          :list="commentList"
+          @reply-click="onReplyClick"
+        />
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isShowAriticleCommentPop = true"
             >写评论</van-button
           >
-          <van-icon name="comment-o" badge="123" color="#777" />
+          <van-icon name="comment-o" :badge="totalCount" color="#777" />
           <!-- 收藏 -->
           <collect-article
             v-model="article.is_collected"
@@ -86,6 +98,13 @@
           <van-icon color="#777" name="good-job-o" />
           <van-icon name="share" color="#777777"></van-icon>
         </div>
+        <!-- 文章评论弹出层 -->
+        <van-popup v-model="isShowAriticleCommentPop" position="bottom">
+          <comment-post
+            :target="article.art_id"
+            @post-success="onPostsuccess"
+          />
+        </van-popup>
       </div>
       <!-- 加载失败：404 -->
       <div class="error-wrap" v-else-if="errStatus === 404">
@@ -99,6 +118,18 @@
         <van-button class="retry-btn" @click="loadArticle">点击重试</van-button>
       </div>
     </div>
+    <!-- 评论回复弹出层 *懒渲染 -->
+    <van-popup
+      v-model="isShowCommentReplyPop"
+      position="bottom"
+      style="height: 100%"
+    >
+      <comment-reply
+        v-if="isShowCommentReplyPop"
+        :currentComment="currentComment"
+        @close="isShowCommentReplyPop = false"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -107,12 +138,24 @@ import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant'
 import followUser from '@/components/follow-user'
 import collectArticle from '@/components/collect-article'
+import commentList from './components/comment-list'
+import CommentPost from './components/comment-post'
+import CommentReply from './components/comment-reply'
 
 export default {
   name: 'ArticleIndex',
   components: {
     followUser,
     collectArticle,
+    commentList,
+    CommentPost,
+    CommentReply,
+  },
+  // 给所有后代组件提供数据
+  provide() {
+    return {
+      articleId: this.articleId,
+    }
   },
   props: {
     // 解耦路由参数
@@ -127,6 +170,11 @@ export default {
       loading: true,
       errStatus: 0,
       isShowFollowLoading: false,
+      totalCount: 0,
+      isShowAriticleCommentPop: false,
+      commentList: [],
+      isShowCommentReplyPop: false,
+      currentComment: {},
     }
   },
   computed: {},
@@ -186,6 +234,18 @@ export default {
           })
         }
       })
+    },
+    onPostsuccess(val) {
+      // console.log('val', val)
+      this.isShowAriticleCommentPop = false
+      // *将发布内容显示到评论列表顶部（想操作CommentList子组件）
+      // 思考：为什么刷新后就不在最前面？
+      this.commentList.unshift(val.new_obj)
+    },
+    onReplyClick(val) {
+      console.log('点击回复', val)
+      this.isShowCommentReplyPop = true
+      this.currentComment = val
     },
   },
 }
