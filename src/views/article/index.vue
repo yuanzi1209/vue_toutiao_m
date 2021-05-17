@@ -78,7 +78,11 @@
             >写评论</van-button
           >
           <van-icon name="comment-o" badge="123" color="#777" />
-          <collect-article v-model="article.is_collected" />
+          <!-- 收藏 -->
+          <collect-article
+            v-model="article.is_collected"
+            :art_id="article.art_id"
+          />
           <van-icon color="#777" name="good-job-o" />
           <van-icon name="share" color="#777777"></van-icon>
         </div>
@@ -142,10 +146,11 @@ export default {
         const { data: res } = await getArticleById(this.articleId)
         console.log('获取文章详情', res)
 
-        // 制造错误
+        /* // 制造错误
         if (Math.random() > 0.5) {
           JSON.parse('abcdefg')
-        }
+        } */
+
         //数据驱动视图不是立即发生的
         this.article = res.data
         setTimeout(() => {
