@@ -60,3 +60,12 @@ export const cancelFollow = (userId) => {
     url: `/v1_0/user/followings/${userId}`,
   })
 }
+
+// 获取用户个人资料
+// 注意点：获取自己的信息不用传参
+export const getUserProfile = () => {
+  return request({
+    method: 'GET',
+    url: `/v1_0/user/profile`,
+  })
+}
